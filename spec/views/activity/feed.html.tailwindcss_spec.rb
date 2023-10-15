@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "activity/feed.html.tailwindcss", type: :view do
-  
-  it "renders the word feed" do
+RSpec.describe 'activity/feed.html.tailwindcss', type: :view do
+  it 'renders the word feed' do
     render template: 'activity/feed'
     expect(rendered).to match(/feed/)
   end
-
 end

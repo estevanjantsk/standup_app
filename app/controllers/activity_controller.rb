@@ -1,7 +1,7 @@
-class ActivityController < ApplicationController
-  def mine
-  end
+# frozen_string_literal: true
 
-  def feed
-  end
+class ActivityController < ApplicationController
+  def mine; end
+
+  def feed; end
 end
