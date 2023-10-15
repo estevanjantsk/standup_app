@@ -15,6 +15,7 @@
   <body class="bg-gray-800 font-sans leading-normal tracking-normal mt-12">
 
     <%= render partial: "layouts/components/header" %>
+    
     <div class="flex flex-col md:flex-row">
       <%= render partial: "layouts/components/sidebar" %>
       
@@ -25,8 +26,11 @@
           <p class="alert"><%= alert %></p>
 
           <%= yield %>
+
         </div>
+
         <%= render partial: "layouts/components/footer" %>
+        
       </div>
     </div>
   </body>
