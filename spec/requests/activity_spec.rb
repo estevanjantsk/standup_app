@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Activities', type: :request do
+  login_user
+
   describe 'GET /mine' do
     it 'returns http success' do
       get '/activity/mine'

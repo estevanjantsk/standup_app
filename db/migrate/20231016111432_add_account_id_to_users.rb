@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAccountIdToUsers < ActiveRecord::Migration[7.1]
   def change
     add_reference :users, :account, index: true, foreign_key: true, type: :uuid
