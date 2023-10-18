@@ -107,13 +107,13 @@ class UsersController < ApplicationController
   def set_users
     @users = current_account.users
   end
-  
+
   def set_user
     @user = User.find(params[:id])
   end
 
   def set_choices
-    @choices = [["Admin", 'admin'],["User", 'user']]
+    @choices = [%w[Admin admin], %w[User user]]
   end
 
   def user_params
@@ -125,9 +125,9 @@ class UsersController < ApplicationController
   end
 
   def update_roles
-    if @user.roles&.first&.name != user_params[:role]
-      @user.remove_role @user.roles&.first&.name.to_sym
-      @user.add_role user_params[:role].to_sym, current_account
-    end
+    return unless @user.roles&.first&.name != user_params[:role]
+
+    @user.remove_role @user.roles&.first&.name&.to_sym
+    @user.add_role user_params[:role].to_sym, current_account
   end
 end
