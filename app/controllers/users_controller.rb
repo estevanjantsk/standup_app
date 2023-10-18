@@ -39,9 +39,95 @@ class UsersController < ApplicationController
     end
   end
 
-  def update_me; end
+  def update_me
+    @user = current_user respond_to do |format|
+      if @user.update(user_params)
+        format.html do
+          redirect_to my_settings_path,
+                      notice: 'Your information was successfully updated.'
+        end
+      else
+        format.html { render :me }
+      end
+    end
+  end
 
-  def create; end
+  def create
+    @user = User.unscoped.new(user_params.except('role'))
+    @user.account = current_account
+    @user.password = 'password123'
 
-  def update; end
+    respond_to do |format|
+      if @user.valid? && @user.invite!(current_user)
+        @user.add_role user_params[:role].to_sym, current_account
+        format.html do
+          redirect_to account_users_path,
+                      notice: 'User was successfully invited.'
+        end
+      else
+        set_choices
+        format.html { render :new }
+      end
+    rescue ActiveRecord::RecordNotUnique
+      flash[:alert] = 'Email must be unique'
+      format.html { render :new }
+    end
+  end
+
+  def update
+    respond_to do |format|
+      if @user.update(user_params.except('role'))
+        update_roles
+        format.html do
+          redirect_to account_users_path,
+                      notice: 'User was successfully updated.'
+        end
+      else
+        set_choices
+        format.html { render :edit }
+      end
+    end
+  end
+
+  def destroy
+    @user.destroy
+
+    respond_to do |format|
+      format.html do
+        redirect_to account_users_path,
+                    notice: 'User was successfully destroyed.'
+      end
+      format.json { head :no_content }
+    end
+  end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_users
+    @users = current_account.users
+  end
+  
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  def set_choices
+    @choices = [["Admin", 'admin'],["User", 'user']]
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :email, :role, :time_zone)
+  end
+
+  def user_password_params
+    params.require(:user).permit(:password, :password_confirmation)
+  end
+
+  def update_roles
+    if @user.roles&.first&.name != user_params[:role]
+      @user.remove_role @user.roles&.first&.name.to_sym
+      @user.add_role user_params[:role].to_sym, current_account
+    end
+  end
 end

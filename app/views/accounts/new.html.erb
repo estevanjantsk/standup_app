@@ -22,7 +22,13 @@
       <% if @account.errors.any? %>
         <div class="text-red-700">
           <h4><%= "#{pluralize(@account.errors.count, "error")} prohibited this account from being saved:" %> </h4>
-          <%= @account.errors.full_messages.map{ |msg| content_tag(:li, msg) }.join %>
+          <div class="px-5">
+            <ul class="list-disc">
+              <% @account.errors.full_messages.each do |message| %>
+                <li class="text-sm"><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
         </div>
       <% end %> 
       <div>
