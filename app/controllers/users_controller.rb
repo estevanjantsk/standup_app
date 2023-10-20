@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy]
+  before_action :set_user, only: %i[edit update destroy]
   before_action :set_users, only: [:index]
 
   def index; end
@@ -40,7 +40,9 @@ class UsersController < ApplicationController
   end
 
   def update_me
-    @user = current_user respond_to do |format|
+    @user = current_user
+
+    respond_to do |format|
       if @user.update(user_params)
         format.html do
           redirect_to my_settings_path,
